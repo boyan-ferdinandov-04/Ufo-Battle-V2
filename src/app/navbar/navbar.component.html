@@ -1,0 +1,43 @@
+<nav class="navbar navbar-expand-lg bg-warning" data-bs-theme="dark">
+  <div class="container-fluid">
+    <a routerLink="/" class="navbar-brand d-flex align-items-center no-underline">
+      <img ngSrc="assets/Universidad_Politécnica_de_Madrid_(logo).png" alt="University Logo" class="logo me-2"
+           height="268" width="245"/>
+      <span class="title text-white">U.P.M. / Space Invaders</span>
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarColor01"
+      aria-controls="navbarColor01"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <a routerLink="/" class="nav-link active text-white">Home <i class="bi bi-house"></i></a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/preferences" routerLinkActive="active" class="nav-link text-white">Preferences <i class="bi bi-sliders"></i></a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/play" class="nav-link text-white">Play <i class="bi bi-play-fill"></i></a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/records" class="nav-link text-white">Records <i class="bi bi-clipboard-fill"></i></a>
+        </li>
+      </ul>
+      <div class="d-flex">
+        <a routerLink="/register" routerLinkActive="active" class="nav-link text-white me-3" *ngIf="!isLoggedIn">
+          Register <i class="bi bi-person-circle"></i>
+        </a>
+        <a routerLink="/login" class="nav-link text-white" *ngIf="!isLoggedIn">Login <i class="bi bi-box-arrow-in-right"></i></a>
+        <a class="nav-link text-white" *ngIf="isLoggedIn" (click)="logout()">Logout <i class="bi bi-box-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+</nav>

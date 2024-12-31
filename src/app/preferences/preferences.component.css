@@ -1,0 +1,19 @@
+.preferences-card {
+  max-width: 400px;
+  border: 2px solid #003366;
+  padding: 20px;
+}
+
+.logo {
+  width: 50px;
+  height: auto;
+}
+
+h2 {
+  color: #003366;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #0056b3;
+}

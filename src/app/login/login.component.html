@@ -1,0 +1,33 @@
+<div class="login-container">
+  <h1>Login</h1>
+  <form (submit)="dologin()" novalidate>
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input
+        id="username"
+        type="text"
+        [(ngModel)]="user.username"
+        name="username"
+        placeholder="Enter your username"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        id="password"
+        type="password"
+        [(ngModel)]="user.password"
+        name="password"
+        placeholder="Enter your password"
+        required
+      />
+    </div>
+
+    <button type="submit">Login</button>
+    <p class="register-link">
+      Don't have an account? <a routerLink="/register">Register here</a>
+    </p>
+  </form>
+</div>

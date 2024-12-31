@@ -1,0 +1,45 @@
+<label style="font-size: x-large">Records</label>
+<table class="score-table">
+  <thead>
+  <tr>
+    <th>Rank</th>
+    <th>Username</th>
+    <th>Score</th>
+    <th>Date</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr
+    *ngFor="let ascore of scoresList; let i = index"
+    [class.odd-row]="i % 2 !== 0"
+  >
+    <td>{{ i + 1 }}</td>
+    <td>{{ ascore.username }}</td>
+    <td>{{ ascore.punctuation }}</td>
+    <td>{{ ascore.recordDate | date : "dd.MM.yyyy" }}</td>
+  </tr>
+  </tbody>
+</table>
+<br />
+<label *ngIf="isUserLoggedIn" style="font-size: x-large">User Records</label>
+<table *ngIf="isUserLoggedIn" class="score-table">
+  <thead>
+  <tr>
+    <th>Rank</th>
+    <th>Username</th>
+    <th>Score</th>
+    <th>Date</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr
+    *ngFor="let ascore of userScoresList; let i = index"
+    [class.odd-row]="i % 2 !== 0"
+  >
+    <td>{{ i + 1 }}</td>
+    <td>{{ ascore.username }}</td>
+    <td>{{ ascore.punctuation }}</td>
+    <td>{{ ascore.recordDate | date : "dd.MM.yyyy" }}</td>
+  </tr>
+  </tbody>
+</table>

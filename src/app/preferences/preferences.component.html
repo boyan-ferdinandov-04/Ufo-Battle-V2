@@ -1,0 +1,52 @@
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="d-flex">
+    <div class="preferences-card bg-warning p-4 rounded shadow-lg me-3">
+      <div class="text-center mb-3">
+        <img src="assets/Universidad_Politécnica_de_Madrid_(logo).png" alt="University Logo" class="logo me-2"/>
+        <h2 class="text-primary">Preferences</h2>
+      </div>
+      <form (ngSubmit)="savePreferences()" #preferencesForm="ngForm">
+        <div class="mb-3">
+          <label for="ufo" class="form-label"><strong>Number of UFOs:</strong></label>
+          <input
+            type="number"
+            id="ufo"
+            class="form-control"
+            name="ufoCount"
+            [(ngModel)]="preferences.ufoCount"
+            min="1"
+            max="5"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="time" class="form-label"><strong>Time (seconds):</strong></label>
+          <input
+            type="number"
+            id="time"
+            class="form-control"
+            name="gameTime"
+            [(ngModel)]="preferences.gameTime"
+            min="60"
+            max="180"
+            step="60"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-primary w-100" [disabled]="!preferencesForm.valid">Accept</button>
+      </form>
+    </div>
+
+    <div class="rules-panel bg-secondary p-3 rounded shadow-lg" style="width: 500px;">
+      <h5 class="text-primary text-center">Rules</h5>
+      <ul class="mb-0">
+        <li>Every hit ufo gives 100 points</li>
+        <li>Every missed shot subtracts 25 points from the total score</li>
+        <li>Final Score Formula:</li>
+        <li>*Final Score = Score / (gameTime / 60)</li>
+        <li>After that:</li>
+        <li>*Final Score = Score - (50 * (number of ufos - 1))</li>
+      </ul>
+    </div>
+  </div>
+</div>

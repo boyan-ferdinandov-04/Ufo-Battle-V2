@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+}
+
+.game-area {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#gameCanvas {
+  width: 100vw;
+  height: 80vh;
+}

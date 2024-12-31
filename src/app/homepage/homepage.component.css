@@ -1,0 +1,43 @@
+.slide-container {
+  margin: 200px;
+  text-align: center;
+}
+
+.slide-image {
+  max-width: 80%;
+  height: auto;
+  border: 2px solid #333;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-size: 1em;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 50px;
+  height: auto;
+}
+
+
+.no-underline {
+  text-decoration: none;
+}
