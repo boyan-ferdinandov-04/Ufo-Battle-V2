@@ -16,6 +16,10 @@ export class GameService {
     this.player = new Player(canvasWidth, canvasHeight);
   }
 
+  respawnEnemy(canvasWidth: number, canvasHeight: number) {
+    this.spawnEnemy(canvasWidth, canvasHeight);
+  }
+
   spawnEnemy(canvasWidth: number, canvasHeight: number) {
     const x = 100 + Math.random() * (canvasWidth - 200);
     const y = 100 + Math.random() * (canvasHeight / 2 - 100);
@@ -30,5 +34,14 @@ export class GameService {
       projectile.position.y < enemy.position.y + enemy.height &&
       projectile.position.y + projectile.height > enemy.position.y
     );
+  }
+
+  fireProjectile() {
+    if (!this.player)
+      return;
+    // Center the projectile at the middle of the ship
+    const projectileX = this.player.position.x + this.player.width / 2 - 10;
+    const projectileY = this.player.position.y;
+    this.projectiles.push(new Projectile(projectileX, projectileY));
   }
 }

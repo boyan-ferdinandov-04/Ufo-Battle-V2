@@ -3,7 +3,7 @@ export class Player{
   velocity = {x: 0, y: 0};
   width = 120
   height = 120
-  speed = 3;
+  speed = 10;
   image = new Image();
 
   constructor(canvasWidth: number, canvasHeight: number) {

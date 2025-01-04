@@ -2,16 +2,18 @@ body {
   margin: 0;
 }
 
+/* Fixed-size game area */
 .game-area {
   position: relative;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 1920px;   /* you can adjust these to your liking */
+  height: 1080px;
+  margin: 40px auto;   /* center on the page */
+  border: 2px solid #000; /* optional border */
+  overflow: hidden;   /* hides anything that goes out of the container */
 }
 
 #gameCanvas {
-  width: 100vw;
-  height: 80vh;
+  width: 100%;   /* fill the entire game-area */
+  height: 100%;
+  display: block;
 }
