@@ -90,15 +90,18 @@ export class PlayComponent implements OnInit {
 
       // 2. Enemies: move + draw
       this.gameService.enemies.forEach((enemy) => {
-        // Move enemy (basic back-and-forth)
         enemy.position.x += enemy.velocity.x;
-        if (
-          enemy.position.x < enemy.initialX - enemy.range ||
-          enemy.position.x > enemy.initialX + enemy.range
-        ) {
+        enemy.position.y += enemy.velocity.y;
+
+        // Clamp movement within canvas boundaries
+        if (enemy.position.x < 0 || enemy.position.x + enemy.width > this.canvas.width) {
           enemy.velocity.x = -enemy.velocity.x;
         }
-        // Draw
+        if (enemy.position.y < 0 || enemy.position.y + enemy.height > this.canvas.height) {
+          enemy.velocity.y = -enemy.velocity.y;
+        }
+
+        // Draw the enemy
         this.context.drawImage(
           enemy.image,
           enemy.position.x,
@@ -167,6 +170,13 @@ export class PlayComponent implements OnInit {
       for (let j = this.gameService.enemies.length - 1; j >= 0; j--) {
         const enemy = this.gameService.enemies[j];
         if (this.gameService.detectCollision(projectile, enemy)) {
+          // Play explosion animation
+          this.gameService.playExplosionAnimation(
+            this.context,
+            enemy.position.x + enemy.width / 2,
+            enemy.position.y + enemy.height / 2
+          );
+
           // Remove collided enemy and projectile
           this.gameService.enemies.splice(j, 1);
           this.gameService.projectiles.splice(i, 1);
@@ -183,6 +193,7 @@ export class PlayComponent implements OnInit {
       }
     }
   }
+
 
 
   startTimer() {

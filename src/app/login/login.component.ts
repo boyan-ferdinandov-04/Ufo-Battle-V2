@@ -1,7 +1,5 @@
 import { Component } from "@angular/core";
-import { Router } from "@angular/router";
 import { UserService } from "../user.service";
-import { User } from "../models/user";
 import { TokenService } from "../token.service";
 
 @Component({
@@ -10,32 +8,38 @@ import { TokenService } from "../token.service";
   styleUrls: ["./login.component.css"],
 })
 export class LoginComponent {
-  user: User = new User();
-  mytoken: string = "";
+  user = { username: "", password: "" };
 
   constructor(
     private userService: UserService,
-    private tokenMng: TokenService
+    private tokenService: TokenService
   ) {}
 
-  dologin() {
-    if (!this.user.username.trim() || !this.user.password.trim()) {
-      alert("Please fill in both username and password.");
+  login(): void {
+    const { username, password } = this.user;
+
+    if (!username.trim() || !password.trim()) {
+      alert("Both fields are required.");
       return;
     }
 
-    this.userService.login(this.user.username, this.user.password).subscribe({
+    this.userService.login(username, password).subscribe({
       next: (response: any) => {
         const token = response.headers.get("Authorization");
-        if (token) this.tokenMng.saveToken(token);
-        window.location.reload();
+        if (token) {
+          this.tokenService.saveToken(token);
+          alert("Login successful.");
+          window.location.reload();
+        } else {
+          alert("Authorization token not found.");
+        }
       },
-      error: (err: any) => {
-        console.error(err);
-        if (err.status === 401) {
+      error: (error) => {
+        console.error("Login error:", error);
+        if (error.status === 401) {
           alert("Invalid username or password.");
         } else {
-          alert("An error occurred. Please try again later.");
+          alert("Something went wrong. Please try again later.");
         }
       },
     });

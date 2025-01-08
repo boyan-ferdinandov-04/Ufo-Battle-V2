@@ -44,4 +44,12 @@ export class GameService {
     const projectileY = this.player.position.y;
     this.projectiles.push(new Projectile(projectileX, projectileY));
   }
+
+  playExplosionAnimation(context: CanvasRenderingContext2D, x: number, y: number) {
+    const explosion = new Image();
+    explosion.src = 'src/assets/explosion.gif';
+    const size = 50;
+    context.drawImage(explosion, x - size / 2, y - size / 2, size, size);
+  }
+
 }

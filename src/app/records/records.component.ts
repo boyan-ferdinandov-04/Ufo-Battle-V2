@@ -1,55 +1,68 @@
-import { TokenService } from "../token.service";
-import { UserService } from "../user.service";
-import { ScoresService } from "../scores.service";
+// Angular Component
 import { Component, OnInit } from "@angular/core";
+import { ScoresService } from "../scores.service";
+import { UserService } from "../user.service";
+import { TokenService } from "../token.service";
 
 @Component({
   selector: "app-records",
   templateUrl: "./records.component.html",
-  styleUrl: "./records.component.css",
+  styleUrls: ["./records.component.css"],
 })
 export class RecordsComponent implements OnInit {
-  scoresList: Array<any> = [];
-  userScoresList: Array<any> = [];
+  scoresList: any[] = [];
+  userScoresList: any[] = [];
   isUserLoggedIn = false;
+
   constructor(
-    private scores: ScoresService,
+    private scoresService: ScoresService,
     private userService: UserService,
-    private tokenMng: TokenService
+    private tokenService: TokenService
   ) {}
-  listScores() {
-    this.scores.getScores().subscribe({
-      next: (values) => {
-        // Sort scoresList by recordDate in descending order
-        this.scoresList = values.sort(
-          (a: any, b: any) =>
-            new Date(b.recordDate).getTime() - new Date(a.recordDate).getTime()
-        );
-      },
-      error: (err) => {
-        console.log("There was an error");
-      },
-    });
-    if (this.isUserLoggedIn) {
-      const user = this.tokenMng.getLoggedInUser();
-      if (!user) {
-        return;
-      }
-      this.scores.getScoresByUser(user).subscribe({
-        next: (values) => {
-          this.userScoresList = values.sort((a: any, b: any) =>
-          new Date(b.recordDate).getTime() -
-            new Date(a.recordDate).getTime());
-        },
-        error: (err) => {
-          console.log("There was an error");
-        },
-      });
-    }
-  }
 
   ngOnInit(): void {
     this.isUserLoggedIn = this.userService.isUserLoggedIn();
-    this.listScores();
+    this.loadScores();
+  }
+
+  private loadScores(): void {
+    this.fetchScores();
+
+    if (this.isUserLoggedIn) {
+      this.fetchUserScores();
+    }
+  }
+
+  private fetchScores(): void {
+    this.scoresService.getScores().subscribe({
+      next: (scores) => {
+        this.scoresList = this.sortByDate(scores);
+      },
+      error: () => {
+        console.error("Error fetching scores.");
+      },
+    });
+  }
+
+  private fetchUserScores(): void {
+    const user = this.tokenService.getLoggedInUser();
+
+    if (!user) {
+      console.warn("No logged-in user found.");
+      return;
+    }
+
+    this.scoresService.getScoresByUser(user).subscribe({
+      next: (userScores) => {
+        this.userScoresList = this.sortByDate(userScores);
+      },
+      error: () => {
+        console.error("Error fetching user scores.");
+      },
+    });
+  }
+
+  private sortByDate(scores: any[]): any[] {
+    return scores.sort((a, b) => new Date(b.recordDate).getTime() - new Date(a.recordDate).getTime());
   }
 }

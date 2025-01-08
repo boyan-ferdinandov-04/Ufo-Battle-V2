@@ -1,6 +1,6 @@
 <div class="login-container">
-  <h1>Login</h1>
-  <form (submit)="dologin()" novalidate>
+  <h1>Sign In</h1>
+  <form (ngSubmit)="login()" novalidate>
     <div class="form-group">
       <label for="username">Username</label>
       <input
@@ -25,9 +25,9 @@
       />
     </div>
 
-    <button type="submit">Login</button>
+    <button type="submit">Log In</button>
     <p class="register-link">
-      Don't have an account? <a routerLink="/register">Register here</a>
+      New here? <a routerLink="/register">Create an account</a>
     </p>
   </form>
 </div>
