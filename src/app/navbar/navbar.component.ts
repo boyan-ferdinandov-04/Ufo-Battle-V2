@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { UserService } from '../services/user.service';
-import { TokenService } from '../services/token.service'; // Import TokenService
+import { TokenService } from '../services/token.service';
 
 @Component({
   selector: 'app-navbar',
@@ -11,7 +11,9 @@ export class NavbarComponent {
   isLoggedIn: boolean = false;
   username: string | null = null; // Add a username property
 
-  constructor(private userService: UserService, private tokenService: TokenService) {}
+  constructor(private userService: UserService,
+              private tokenService: TokenService) {
+  }
 
   ngOnInit() {
     this.isLoggedIn = this.userService.isUserLoggedIn();
@@ -23,7 +25,7 @@ export class NavbarComponent {
   logout() {
     this.userService.logout();
     this.isLoggedIn = false;
-    this.username = null; // Clear the username on logout
+    this.username = null;
     window.location.reload();
   }
 }

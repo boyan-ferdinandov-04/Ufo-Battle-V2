@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import {jwtDecode} from  'jwt-decode';
+import { jwtDecode } from  'jwt-decode';
 import { JwtPayload } from 'jwt-decode';
 
 @Injectable({

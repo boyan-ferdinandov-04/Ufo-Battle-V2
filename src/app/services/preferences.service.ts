@@ -7,20 +7,18 @@ import { TokenService } from './token.service';
   providedIn: 'root',
 })
 export class PreferencesService {
-  private serverUrl = 'http://localhost:3000'; // local server
+  private localServerUrl = 'http://localhost:3000';
 
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
-  fetchPreferences(username: string): Observable<any> {
+  getPreferences(username: string): Observable<any> {
     const headers = this.getAuthHeaders();
-    return this.http.get<any>(`${this.serverUrl}/preferences/remote/${username}`, { headers });
+    return this.http.get(`${this.localServerUrl}/preferences/remote/${username}`, { headers });
   }
 
-  savePreferences(username: string, prefs: any): Observable<any> {
+  savePreferences(username: string, prefs: { ufos: number; time: number }): Observable<any> {
     const headers = this.getAuthHeaders();
-    return this.http.post<any>(`${this.serverUrl}/preferences/remote/${username}`, prefs, {
-      headers,
-    });
+    return this.http.post(`${this.localServerUrl}/preferences/remote/${username}`, prefs, { headers });
   }
 
   private getAuthHeaders(): HttpHeaders {

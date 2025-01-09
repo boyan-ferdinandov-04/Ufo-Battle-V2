@@ -30,15 +30,14 @@ export class PreferencesComponent implements OnInit {
     }
   }
 
-  // 1. Save Locally
   savePreferencesLocally() {
     localStorage.setItem('ufoCount', this.preferences.ufoCount.toString());
     localStorage.setItem('gameTime', this.preferences.gameTime.toString());
     alert('Preferences saved locally!');
   }
 
-  // 2. Save on Server (Node + MySQL)
   savePreferencesOnServer() {
+    // Make sure user is logged in
     if (!this.userService.isUserLoggedIn()) {
       alert('You must be logged in to save on the server.');
       return;
@@ -50,7 +49,6 @@ export class PreferencesComponent implements OnInit {
       return;
     }
 
-    // Send to server
     this.prefsService
       .savePreferences(username, {
         ufos: this.preferences.ufoCount,
@@ -68,21 +66,21 @@ export class PreferencesComponent implements OnInit {
       });
   }
 
-  // 3. Fetch from Server (Node + MySQL)
   fetchPreferencesFromServer() {
+    // Making sure user is logged in
     if (!this.userService.isUserLoggedIn()) {
       alert('You must be logged in to fetch preferences from the server.');
       return;
     }
 
+    // Getting username from token
     const username = this.tokenService.getLoggedInUser();
     if (!username) {
       alert('No username found in token.');
       return;
     }
 
-    // Get from server
-    this.prefsService.fetchPreferences(username).subscribe({
+    this.prefsService.getPreferences(username).subscribe({
       next: (res: any) => {
         console.log('Fetched preferences from server:', res);
         this.preferences.ufoCount = res.ufos;

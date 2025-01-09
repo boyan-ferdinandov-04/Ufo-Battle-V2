@@ -12,20 +12,22 @@ export class PlayComponent implements OnInit {
   points = 0;
   remainingTime = 60; // Default game duration
   ufoCount = 1; // Default UFO count
-  initialTime = 60; // To track the starting time
+  initialTime = 60; // Track the starting time
   private scoreSaved = false; // Prevent duplicate saves
 
   private canvas!: HTMLCanvasElement;
   private context!: CanvasRenderingContext2D;
   private keysPressed: { [key: string]: boolean } = {};
 
-  constructor(private gameService: GameService, private scoresService: ScoresService) {}
+  constructor(private gameService: GameService,
+              private scoresService: ScoresService) {}
 
   ngOnInit(): void {
     const savedUfoCount = localStorage.getItem('ufoCount');
     const savedGameTime = localStorage.getItem('gameTime');
 
-    if (savedUfoCount) this.ufoCount = parseInt(savedUfoCount, 10);
+    if (savedUfoCount)
+      this.ufoCount = parseInt(savedUfoCount, 10);
     if (savedGameTime) {
       this.remainingTime = parseInt(savedGameTime, 10);
       this.initialTime = this.remainingTime;
@@ -38,16 +40,13 @@ export class PlayComponent implements OnInit {
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
 
-    // Initialize or reset the game state:
     this.gameService.enemies = [];
     this.gameService.initializePlayer(this.canvas.width, this.canvas.height);
 
-    // Spawn UFOs
     for (let i = 0; i < this.ufoCount; i++) {
       this.gameService.spawnEnemy(this.canvas.width, this.canvas.height);
     }
 
-    // Start the timer and game loop
     this.startTimer();
     this.startGameLoop();
   }
@@ -113,7 +112,7 @@ export class PlayComponent implements OnInit {
         // Remove projectile if out of bounds
         if (projectile.position.y + projectile.height < 0) {
           this.gameService.projectiles.splice(index, 1);
-          this.points -= 25; // Penalty for missed shots
+          this.points -= 25;
         }
 
         this.context.drawImage(
@@ -127,8 +126,6 @@ export class PlayComponent implements OnInit {
 
       // Collision detection
       this.checkCollisions();
-
-      // Continue the game loop if time is left
       if (this.remainingTime > 0) {
         requestAnimationFrame(update);
       }
@@ -167,7 +164,6 @@ export class PlayComponent implements OnInit {
             enemy.position.y + enemy.height / 2
           );
 
-          // Remove collided entities and award points
           this.gameService.enemies.splice(j, 1);
           this.gameService.projectiles.splice(i, 1);
           this.points += 100;
