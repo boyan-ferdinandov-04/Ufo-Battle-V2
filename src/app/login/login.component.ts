@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
-import { UserService } from "../user.service";
-import { TokenService } from "../token.service";
+import { UserService } from "../services/user.service";
+import { TokenService } from "../services/token.service";
 
 @Component({
   selector: "app-login",

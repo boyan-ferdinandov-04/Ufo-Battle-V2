@@ -7,7 +7,7 @@ import {RegisterComponent} from "./register/register.component";
 import {LoginComponent} from "./login/login.component";
 import {PreferencesComponent} from "./preferences/preferences.component";
 import {PlayComponent} from "./play/play.component";
-import {AuthGuard} from "./auth.guard";
+import {AuthGuard} from "./services/auth.guard";
 
 const routes: Routes = [
   {path: '', component: HomepageComponent},

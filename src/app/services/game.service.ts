@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Player } from "./models/player";
-import { Projectile } from './models/projectile';
-import { Enemy } from './models/enemy';
+import { Player } from "../models/player";
+import { Projectile } from '../models/projectile';
+import { Enemy } from '../models/enemy';
 
 @Injectable({
   providedIn: 'root',

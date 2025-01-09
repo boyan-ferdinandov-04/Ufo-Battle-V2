@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { ScoresService } from "../scores.service";
-import { UserService } from "../user.service";
-import { TokenService } from "../token.service";
+import { ScoresService } from "../services/scores.service";
+import { UserService } from "../services/user.service";
+import { TokenService } from "../services/token.service";
 
 @Component({
   selector: "app-records",

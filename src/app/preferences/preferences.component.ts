@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { TokenService } from '../token.service';
-import { UserService } from '../user.service';
-import { PreferencesService } from '../preferences.service';
+import { TokenService } from '../services/token.service';
+import { UserService } from '../services/user.service';
+import { PreferencesService } from '../services/preferences.service';
 
 @Component({
   selector: 'app-preferences',

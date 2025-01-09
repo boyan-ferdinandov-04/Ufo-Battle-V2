@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild, HostListener } from '@angular/core';
-import { GameService } from '../game.service';
-import { ScoresService } from "../scores.service";
+import { GameService } from '../services/game.service';
+import { ScoresService } from "../services/scores.service";
 
 @Component({
   selector: 'app-play',
