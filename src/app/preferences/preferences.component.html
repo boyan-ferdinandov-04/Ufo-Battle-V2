@@ -2,10 +2,14 @@
   <div class="d-flex">
     <div class="preferences-card bg-warning p-4 rounded shadow-lg me-3">
       <div class="text-center mb-3">
-        <img src="assets/Universidad_Politécnica_de_Madrid_(logo).png" alt="University Logo" class="logo me-2"/>
+        <img
+          src="assets/Universidad_Politécnica_de_Madrid_(logo).png"
+          alt="University Logo"
+          class="logo me-2"
+        />
         <h2 class="text-primary">Preferences</h2>
       </div>
-      <form (ngSubmit)="savePreferences()" #preferencesForm="ngForm">
+      <form #preferencesForm="ngForm">
         <div class="mb-3">
           <label for="ufo" class="form-label"><strong>Number of UFOs:</strong></label>
           <input
@@ -33,8 +37,18 @@
             required
           />
         </div>
-        <button type="submit" class="btn btn-primary w-100" [disabled]="!preferencesForm.valid">Accept</button>
       </form>
+
+      <!-- Buttons for the three operations: Save Locally, Save on Server, Fetch from Server -->
+      <button class="btn btn-primary w-100 mb-2" (click)="savePreferencesLocally()">
+        Save Locally
+      </button>
+      <button class="btn btn-success w-100 mb-2" (click)="savePreferencesOnServer()">
+        Save on Server
+      </button>
+      <button class="btn btn-info w-100" (click)="fetchPreferencesFromServer()">
+        Fetch from Server
+      </button>
     </div>
 
     <div class="rules-panel bg-secondary p-3 rounded shadow-lg" style="width: 500px;">

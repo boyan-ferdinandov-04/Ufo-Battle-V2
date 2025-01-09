@@ -17,17 +17,14 @@ export class UserService {
     );
   }
 
-
   isUserLoggedIn() {
     const token = this.tokenMng.getToken();
     return token !== null;
   }
-
   logOut() {
     this.tokenMng.removeToken();
 
   }
-
   checkUsernameExists(username: string) {
     return this.http.get<boolean>(`${this.usersUrl}/${username}`);
   }
