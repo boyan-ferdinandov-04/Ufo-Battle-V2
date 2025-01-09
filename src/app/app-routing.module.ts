@@ -7,14 +7,15 @@ import {RegisterComponent} from "./register/register.component";
 import {LoginComponent} from "./login/login.component";
 import {PreferencesComponent} from "./preferences/preferences.component";
 import {PlayComponent} from "./play/play.component";
+import {AuthGuard} from "./auth.guard";
 
 const routes: Routes = [
   {path: '', component: HomepageComponent},
   {path: 'records', component: RecordsComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'login', component: LoginComponent},
-  {path: 'preferences', component: PreferencesComponent},
-  {path: 'play', component: PlayComponent},
+  {path: 'preferences', component: PreferencesComponent, canActivate: [AuthGuard]},
+  {path: 'play', component: PlayComponent, canActivate: [AuthGuard]},
   {path: '**',redirectTo: ''}
 ];
 

@@ -4,6 +4,7 @@
   <tr>
     <th>Rank</th>
     <th>Username</th>
+    <th>Disposed Time</th>
     <th>Score</th>
     <th>Date</th>
   </tr>
@@ -12,6 +13,7 @@
   <tr *ngFor="let score of scoresList; let index = index" [class.odd-row]="index % 2 !== 0">
     <td>{{ index + 1 }}</td>
     <td>{{ score.username }}</td>
+    <td>{{score.disposedTime}}</td>
     <td>{{ score.punctuation }}</td>
     <td>{{ score.recordDate | date: 'dd.MM.yyyy' }}</td>
   </tr>
@@ -27,6 +29,7 @@
     <tr>
       <th>Rank</th>
       <th>Username</th>
+      <th>Disposed Time</th>
       <th>Score</th>
       <th>Date</th>
     </tr>
@@ -35,6 +38,7 @@
     <tr *ngFor="let score of userScoresList; let index = index" [class.odd-row]="index % 2 !== 0">
       <td>{{ index + 1 }}</td>
       <td>{{ score.username }}</td>
+      <td>{{score.disposedTime}}</td>
       <td>{{ score.punctuation }}</td>
       <td>{{ score.recordDate | date: 'dd.MM.yyyy' }}</td>
     </tr>

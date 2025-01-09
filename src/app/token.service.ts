@@ -1,65 +1,56 @@
-import { DOCUMENT } from "@angular/common";
-import { Inject, Injectable } from "@angular/core";
-import { jwtDecode } from "jwt-decode";
+import { Injectable, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import {jwtDecode} from  'jwt-decode';
+import { JwtPayload } from 'jwt-decode';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class TokenService {
-  localStorage;
-  constructor(@Inject(DOCUMENT) private document: Document) {
-    this.localStorage = document.defaultView?.localStorage;
+  private readonly localStorage: Storage | null;
+
+  constructor(@Inject(DOCUMENT) private doc: Document) {
+    this.localStorage = doc.defaultView?.localStorage || null;
   }
 
-  saveToken(token: string) {
-    if (this.localStorage)
-      this.localStorage.setItem("token", token);
-  }
-
-  getToken() {
-    if (!this.localStorage || !this.validToken()) return null;
-    return this.localStorage.getItem("token");
-  }
-
-  getLoggedInUser() {
-    if (!this.localStorage) return false;
-    const tokenData = this.localStorage.getItem("token");
-    if (!tokenData) {
-      return false;
+  saveToken(token: string): void {
+    if (this.localStorage) {
+      this.localStorage.setItem('token', token);
     }
-    const token = this.decodeToken(tokenData);
-    if (!token) {
-      return false;
-    }
-
-    return token.username;
   }
 
-  removeToken() {
-    if (this.localStorage) this.localStorage.removeItem("token");
+  getToken(): string | null {
+    const token = this.localStorage?.getItem('token');
+    return token && this.isValidToken(token) ? token : null;
   }
 
-  validToken() {
-    if (!this.localStorage) return false;
-    const tokenData = this.localStorage.getItem("token");
-    if (!tokenData) {
-      return false;
-    }
-    const token = this.decodeToken(tokenData);
-    if (!token) {
-      return false;
-    }
-    const currentTime = Math.floor(Date.now() / 1000);
-
-    // Check if the current time is greater than the token's expiration time
-    return currentTime < token.exp;
+  removeToken(): void {
+    this.localStorage?.removeItem('token');
   }
 
-  decodeToken(token: string): any {
+  getLoggedInUser(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const decoded = this.decodeToken(token);
+    return decoded?.username || null;
+  }
+
+  private isValidToken(token: string): boolean {
     try {
-      return jwtDecode(token);
-    } catch (Error) {
-      return null;
+      const decoded = this.decodeToken(token);
+      const currentTime = Math.floor(Date.now() / 1000);
+      return decoded?.exp ? currentTime < decoded.exp : false;
+    } catch {
+      return false;
+    }
+  }
+
+  private decodeToken(token: string): JwtPayload & { username?: string } {
+    try {
+      return jwtDecode<JwtPayload & { username?: string }>(token);
+    } catch {
+      throw new Error('Invalid token');
     }
   }
 }

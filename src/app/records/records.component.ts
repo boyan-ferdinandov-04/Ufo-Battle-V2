@@ -1,4 +1,3 @@
-// Angular Component
 import { Component, OnInit } from "@angular/core";
 import { ScoresService } from "../scores.service";
 import { UserService } from "../user.service";
@@ -35,30 +34,19 @@ export class RecordsComponent implements OnInit {
 
   private fetchScores(): void {
     this.scoresService.getScores().subscribe({
-      next: (scores) => {
-        this.scoresList = this.sortByDate(scores);
-      },
-      error: () => {
-        console.error("Error fetching scores.");
-      },
+      next: (scores) => this.scoresList = this.sortByDate(scores),
+      error: () => console.error("Error fetching scores."),
     });
   }
 
   private fetchUserScores(): void {
     const user = this.tokenService.getLoggedInUser();
-
-    if (!user) {
-      console.warn("No logged-in user found.");
-      return;
-    }
+    if (!user)
+      return console.warn("No logged-in user found.");
 
     this.scoresService.getScoresByUser(user).subscribe({
-      next: (userScores) => {
-        this.userScoresList = this.sortByDate(userScores);
-      },
-      error: () => {
-        console.error("Error fetching user scores.");
-      },
+      next: (userScores) => this.userScoresList = this.sortByDate(userScores),
+      error: () => console.error("Error fetching user scores."),
     });
   }
 

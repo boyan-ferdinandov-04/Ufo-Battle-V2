@@ -14,6 +14,7 @@ import { PreferencesComponent } from './preferences/preferences.component';
 import { LoginComponent } from './login/login.component';
 import { PlayComponent } from './play/play.component';
 import {FormsModule} from "@angular/forms";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -30,7 +31,12 @@ import {FormsModule} from "@angular/forms";
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ToastrModule.forRoot(),
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    }),
     NgOptimizedImage,
     FormsModule
   ],

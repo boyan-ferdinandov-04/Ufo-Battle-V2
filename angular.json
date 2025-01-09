@@ -100,7 +100,7 @@
             ],
             "styles": [
               "src/styles.css",
-              "src/assets/bootstrap.min.css"
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": []
           }

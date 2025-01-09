@@ -12,14 +12,14 @@ export class LoginComponent {
 
   constructor(
     private userService: UserService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) {}
 
   login(): void {
     const { username, password } = this.user;
 
     if (!username.trim() || !password.trim()) {
-      alert("Both fields are required.");
+      alert("Username and password are required!");
       return;
     }
 

@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild, HostListener } from '@angular/core';
 import { GameService } from '../game.service';
-import {ScoresService} from "../scores.service";
+import { ScoresService } from "../scores.service";
 
 @Component({
   selector: 'app-play',
@@ -10,20 +10,21 @@ import {ScoresService} from "../scores.service";
 export class PlayComponent implements OnInit {
   @ViewChild('gameCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
   points = 0;
-  remainingTime = 60; // Default
-  ufoCount = 1; // Default
-  initialTime = 60; // Keep track of the starting time
+  remainingTime = 60; // Default game duration
+  ufoCount = 1; // Default UFO count
+  initialTime = 60; // To track the starting time
+  private scoreSaved = false; // Prevent duplicate saves
 
   private canvas!: HTMLCanvasElement;
   private context!: CanvasRenderingContext2D;
   private keysPressed: { [key: string]: boolean } = {};
 
-  constructor(private gameService: GameService,
-              private scoresService: ScoresService,) {}
+  constructor(private gameService: GameService, private scoresService: ScoresService) {}
 
   ngOnInit(): void {
     const savedUfoCount = localStorage.getItem('ufoCount');
     const savedGameTime = localStorage.getItem('gameTime');
+
     if (savedUfoCount) this.ufoCount = parseInt(savedUfoCount, 10);
     if (savedGameTime) {
       this.remainingTime = parseInt(savedGameTime, 10);
@@ -31,54 +32,49 @@ export class PlayComponent implements OnInit {
     }
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.canvas = this.canvasRef.nativeElement;
     this.context = this.canvas.getContext('2d')!;
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
 
     // Initialize or reset the game state:
-    // 1. Clear existing enemies before spawning new ones.
     this.gameService.enemies = [];
-
-    // 2. Initialize player
     this.gameService.initializePlayer(this.canvas.width, this.canvas.height);
 
-    // 3. Spawn EXACTLY the number of UFOs the user specified
+    // Spawn UFOs
     for (let i = 0; i < this.ufoCount; i++) {
       this.gameService.spawnEnemy(this.canvas.width, this.canvas.height);
     }
 
-    // 4. Start the countdown timer and the game loop
+    // Start the timer and game loop
     this.startTimer();
     this.startGameLoop();
   }
 
   @HostListener('window:keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent) {
+  onKeyDown(event: KeyboardEvent): void {
     this.keysPressed[event.key] = true;
 
-    // Shoot only if no projectile exists in the array
-    if (event.key === 'ArrowUp') {
-      if (this.gameService.projectiles.length === 0) {
-        this.gameService.fireProjectile();
-      }
+    // Shoot projectiles when pressing the up arrow
+    if (event.key === 'ArrowUp' && this.gameService.projectiles.length === 0) {
+      this.gameService.fireProjectile();
     }
   }
 
   @HostListener('window:keyup', ['$event'])
-  onKeyUp(event: KeyboardEvent) {
+  onKeyUp(event: KeyboardEvent): void {
     this.keysPressed[event.key] = false;
   }
 
-  startGameLoop() {
+  startGameLoop(): void {
     const update = () => {
-      // Clear the entire screen
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-      // 1. Player movement
+      // Player movement
       this.handlePlayerMovement();
-      // Draw player
+
+      // Draw the player
       const player = this.gameService.player!;
       this.context.drawImage(
         player.image,
@@ -88,12 +84,12 @@ export class PlayComponent implements OnInit {
         player.height
       );
 
-      // 2. Enemies: move + draw
+      // Move and draw enemies
       this.gameService.enemies.forEach((enemy) => {
         enemy.position.x += enemy.velocity.x;
         enemy.position.y += enemy.velocity.y;
 
-        // Clamp movement within canvas boundaries
+        // Boundary collision for enemies
         if (enemy.position.x < 0 || enemy.position.x + enemy.width > this.canvas.width) {
           enemy.velocity.x = -enemy.velocity.x;
         }
@@ -101,7 +97,6 @@ export class PlayComponent implements OnInit {
           enemy.velocity.y = -enemy.velocity.y;
         }
 
-        // Draw the enemy
         this.context.drawImage(
           enemy.image,
           enemy.position.x,
@@ -111,10 +106,16 @@ export class PlayComponent implements OnInit {
         );
       });
 
-      // 3. Projectiles: move + draw
+      // Move and draw projectiles
       this.gameService.projectiles.forEach((projectile, index) => {
         projectile.position.y += projectile.velocity.y;
-        // Draw projectile
+
+        // Remove projectile if out of bounds
+        if (projectile.position.y + projectile.height < 0) {
+          this.gameService.projectiles.splice(index, 1);
+          this.points -= 25; // Penalty for missed shots
+        }
+
         this.context.drawImage(
           projectile.image,
           projectile.position.x,
@@ -122,18 +123,12 @@ export class PlayComponent implements OnInit {
           projectile.width,
           projectile.height
         );
-
-        // If projectile is off-screen (top), remove it => missed shot
-        if (projectile.position.y + projectile.height < 0) {
-          this.gameService.projectiles.splice(index, 1);
-          this.points -= 25; // Missed shot penalty
-        }
       });
 
-      // 4. Collision detection
+      // Collision detection
       this.checkCollisions();
 
-      // Keep looping if time hasn't run out
+      // Continue the game loop if time is left
       if (this.remainingTime > 0) {
         requestAnimationFrame(update);
       }
@@ -142,7 +137,7 @@ export class PlayComponent implements OnInit {
     update();
   }
 
-  handlePlayerMovement() {
+  handlePlayerMovement(): void {
     const player = this.gameService.player!;
     if (this.keysPressed['ArrowRight']) {
       player.velocity.x = player.speed;
@@ -152,51 +147,43 @@ export class PlayComponent implements OnInit {
       player.velocity.x = 0;
     }
 
-    // Update position
+    // Update position and keep the player within the canvas
     player.position.x += player.velocity.x;
-
-    // Clamp to canvas
-    if (player.position.x < 0) {
-      player.position.x = 0;
-    }
+    if (player.position.x < 0) player.position.x = 0;
     if (player.position.x + player.width > this.canvas.width) {
       player.position.x = this.canvas.width - player.width;
     }
   }
 
-  checkCollisions() {
+  checkCollisions(): void {
     for (let i = this.gameService.projectiles.length - 1; i >= 0; i--) {
       const projectile = this.gameService.projectiles[i];
       for (let j = this.gameService.enemies.length - 1; j >= 0; j--) {
         const enemy = this.gameService.enemies[j];
         if (this.gameService.detectCollision(projectile, enemy)) {
-          // Play explosion animation
           this.gameService.playExplosionAnimation(
             this.context,
             enemy.position.x + enemy.width / 2,
             enemy.position.y + enemy.height / 2
           );
 
-          // Remove collided enemy and projectile
+          // Remove collided entities and award points
           this.gameService.enemies.splice(j, 1);
           this.gameService.projectiles.splice(i, 1);
-
-          // +100 points for a hit
           this.points += 100;
 
-          // Respawn a new enemy if the current count is less than the maximum
+          // Respawn enemies if needed
           if (this.gameService.enemies.length < this.ufoCount) {
             this.gameService.respawnEnemy(this.canvas.width, this.canvas.height);
           }
+
           break;
         }
       }
     }
   }
 
-
-
-  startTimer() {
+  startTimer(): void {
     const timerInterval = setInterval(() => {
       if (this.remainingTime > 0) {
         this.remainingTime--;
@@ -207,27 +194,35 @@ export class PlayComponent implements OnInit {
     }, 1000);
   }
 
-  endGame() {
-    let finalScore = this.points;
-    finalScore = finalScore / (this.initialTime / 60);
-    finalScore = finalScore - 50 * (this.ufoCount - 1);
+  saveScore(): void {
+    if (this.scoreSaved) {
+      alert('Score has already been saved!');
+      return;
+    }
 
-    // API call to save the score
-    const scoreData = {
-      punctuation: Math.max(0, Math.round(finalScore)),
+    const finalScoreData = {
+      punctuation: Math.max(0, Math.round(this.calculateFinalScore())),
       ufos: this.ufoCount,
       disposedTime: this.initialTime,
     };
-    console.log('End of game, sending scoreData:', scoreData);
 
-    this.scoresService.postRecord(scoreData).subscribe({
-      next: (response) => {
-        alert(`Score saved! Final Score: ${scoreData.punctuation}`);
+    this.scoresService.postRecord(finalScoreData).subscribe({
+      next: () => {
+        this.scoreSaved = true;
+        alert(`Score saved! Final Score: ${finalScoreData.punctuation}`);
       },
-      error: (error) => {
-        console.error('Error saving score:', error);
-        alert('Failed to save the score. Please try again.');
-      },
+      error: () => alert('Failed to save the score. Please try again.'),
     });
+  }
+
+  calculateFinalScore(): number {
+    let finalScore = this.points;
+    finalScore /= this.initialTime / 60;
+    finalScore -= 50 * (this.ufoCount - 1);
+    return finalScore;
+  }
+
+  endGame(): void {
+    alert('Game over! Click the "Save Score" button to save your score.');
   }
 }

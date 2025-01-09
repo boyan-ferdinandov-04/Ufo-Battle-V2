@@ -7,29 +7,30 @@ import { TokenService } from "./token.service";
   providedIn: "root",
 })
 export class UserService {
-  private usersUrl = `${"http://wd.etsisi.upm.es:10000"}/users`;
-  constructor(private http: HttpClient, private tokenMng: TokenService) {}
+  private readonly usersUrl = 'http://wd.etsisi.upm.es:10000/users';
 
-  login(user: string, pass: string): Observable<any> {
-    return this.http.get(
-      `${this.usersUrl}/login?username=${user}&password=${pass}`,
-      { observe: "response" }
-    );
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
+
+  login(username: string, password: string): Observable<any> {
+    return this.http.get(`${this.usersUrl}/login`, {
+      params: { username, password },
+      observe: 'response',
+    });
   }
 
-  isUserLoggedIn() {
-    const token = this.tokenMng.getToken();
-    return token !== null;
+  isUserLoggedIn(): boolean {
+    return !!this.tokenService.getToken();
   }
-  logOut() {
-    this.tokenMng.removeToken();
 
+  logout(): void {
+    this.tokenService.removeToken();
   }
-  checkUsernameExists(username: string) {
+
+  checkUsernameExists(username: string): Observable<boolean> {
     return this.http.get<boolean>(`${this.usersUrl}/${username}`);
   }
 
   registerUser(user: any): Observable<any> {
-    return this.http.post(this.usersUrl, user);
+    return this.http.post(`${this.usersUrl}`, user);
   }
 }
