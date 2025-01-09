@@ -57,7 +57,7 @@ export class PreferencesComponent implements OnInit {
       .subscribe({
         next: (res: any) => {
           console.log(res);
-          alert('Preferences saved on server (MySQL) successfully!');
+          alert('Preferences saved on server (Database) successfully!');
         },
         error: (err: any) => {
           console.error(err);
