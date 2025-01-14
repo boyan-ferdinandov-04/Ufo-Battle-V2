@@ -1,0 +1,23 @@
+<div class="messages-container">
+  <h2>Last Five Messages</h2>
+
+  <table *ngIf="messages && messages.length > 0;">
+    <thead>
+    <tr>
+      <th>Message ID</th>
+      <th>Origin</th>
+      <th>Message</th>
+      <th>Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let msg of messages">
+      <td>{{ msg.msgId }}</td>
+      <td>{{ msg.origin }}</td>
+      <td>{{ msg.text }}</td>
+      <td>{{ msg.date | date:'dd.MM.yyyy' }}</td>
+    </tr>
+    </tbody>
+  </table>
+  <button type="button" class="btn btn-danger" (click)="deleteMessages()"><i class="bi bi-trash-fill"></i></button>
+</div>

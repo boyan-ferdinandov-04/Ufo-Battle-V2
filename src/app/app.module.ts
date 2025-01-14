@@ -15,6 +15,7 @@ import { LoginComponent } from './login/login.component';
 import { PlayComponent } from './play/play.component';
 import {FormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { MessagesComponent } from './messages/messages.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     PreferencesComponent,
     LoginComponent,
     PlayComponent,
+    MessagesComponent,
   ],
   imports: [
     BrowserModule,

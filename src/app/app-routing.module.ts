@@ -8,6 +8,7 @@ import {LoginComponent} from "./login/login.component";
 import {PreferencesComponent} from "./preferences/preferences.component";
 import {PlayComponent} from "./play/play.component";
 import {AuthGuard} from "./services/auth.guard";
+import {MessagesComponent} from "./messages/messages.component";
 
 const routes: Routes = [
   {path: '', component: HomepageComponent},
@@ -16,6 +17,7 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'preferences', component: PreferencesComponent, canActivate: [AuthGuard]},
   {path: 'play', component: PlayComponent, canActivate: [AuthGuard]},
+  {path: 'messages', component: MessagesComponent, canActivate: [AuthGuard]},
   {path: '**',redirectTo: ''}
 ];
 
